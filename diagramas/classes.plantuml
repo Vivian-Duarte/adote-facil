@@ -1,0 +1,46 @@
+@startuml
+title Diagrama de Classes - Adote Fácil
+
+!theme spacelab
+
+class Usuario {
+  + nome: String
+  + email: String
+  - senha_hash: String
+  --
+  + criar()
+  + atualizar()
+  + autenticar()
+}
+
+class Animal {
+  + nome: String
+  + genero: String
+  + tipo: String
+  + status: String
+  + imagens: Array[String]
+  --
+  + criarAnuncio()
+  + atualizarStatus()
+}
+
+class Chat {
+  --
+  + criar()
+  + listarMensagens()
+}
+
+class Mensagem {
+  + conteudo: String
+  + dataEnvio: DateTime
+  --
+  + enviar()
+}
+
+
+Usuario "1" -- "*" Animal : "publica"
+Usuario "2..*" -- "1" Chat : "participa em"
+Chat "1" -- "*" Mensagem : "contém"
+Usuario "1" -- "*" Mensagem : "envia"
+
+@enduml

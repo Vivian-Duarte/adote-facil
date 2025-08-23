@@ -1,0 +1,14 @@
+@startuml
+
+title Diagrama de Componentes - Adote Fácil
+
+!theme spacelab
+
+component [Frontend\n(Next.js)] as fe
+component [Backend\n(Node.js/Express)] as be
+database "Banco de Dados\n(PostgreSQL)" as db
+
+fe ..> be : "consome API"
+be ..> db : "persiste dados"
+
+@enduml
