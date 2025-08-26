@@ -121,4 +121,4 @@ Cada história de usuário descreve o que ele deseja fazer e por quê, acompanha
 - **Cenários Alternativos**
   - **Usuário sem anúncios**
     1. O doador ainda não cadastrou nenhum animal.
-    2. O sistema mostra a mensagem *“Você ainda não cadastrou nenhum animal para adoção. Clique aqui para cadastrar."*
+    2. O sistema mostra a mensagem *“Você ainda não cadastrou nenhum animal para adoção. Clique aqui para cadastrar."

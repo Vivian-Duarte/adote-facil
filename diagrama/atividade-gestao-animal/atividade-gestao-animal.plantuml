@@ -1,0 +1,85 @@
+@startuml
+title Diagrama de Atividade - Gestão de Animais (Anúncio e Adoção)
+
+skinparam handwritten true
+skinparam activity {
+  BorderColor #A3BE8C
+  BackgroundColor #ECEFF4
+  ArrowColor #D08770
+}
+skinparam partition {
+  BorderColor #4C566A
+  BackgroundColor #D8DEE9
+}
+
+|Usuário Doador|
+start
+:Acessar a área "Disponibilizar animal para adoção";
+
+|Frontend|
+:Preencher formulário do animal (nome, tipo, fotos, etc.);
+:Submeter formulário;
+
+|Backend|
+:Receber requisição (POST /animals);
+note right
+  - Middleware JWT valida o usuário.
+  - Middleware Multer processa as imagens.
+end note
+:Salvar dados do animal e imagens no banco de dados;
+:Retornar sucesso;
+
+|Usuário Doador|
+:Visualizar o animal na lista "Meus animais disponíveis";
+
+|Usuário Adotante|
+:Fazer login na plataforma;
+:Acessar a tela "Animais disponíveis para adoção";
+
+|Backend|
+:Receber requisição (GET /animals/available);
+:Buscar e retornar a lista de animais disponíveis;
+
+|Usuário Adotante|
+:Visualizar a lista de animais;
+:Aplicar filtros (opcional);
+:Encontrar um animal de interesse e clicar em "Saiba mais";
+:Clicar em "Iniciar conversa com o doador";
+
+|Backend|
+:Receber requisição para criar chat (POST /users/chats);
+:Criar um novo chat entre Doador e Adotante;
+:Retornar dados do chat;
+
+|Frontend|
+:Redirecionar para a tela de chat;
+
+fork
+  |Usuário Doador|
+  :Receber notificação de nova mensagem;
+  :Acessar "Minhas conversas" e responder;
+fork again
+  |Usuário Adotante|
+  :Enviar primeira mensagem no chat;
+endfork
+
+:Doador e Adotante conversam sobre a adoção;
+if (Adoção é confirmada?) then (Sim)
+  |Usuário Doador|
+  :Acessar "Meus animais disponíveis";
+  :Marcar o animal como "Adotado";
+
+  |Backend|
+  :Receber requisição (PATCH /animals/:id);
+  :Atualizar o status do animal no banco de dados;
+  :Animal não aparece mais na lista de disponíveis;
+  
+  |Usuário Adotante|
+  :Adota o animal;
+  stop
+else (Não)
+  :Conversa é encerrada sem adoção;
+  stop
+endif
+
+@enduml

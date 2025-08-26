@@ -15,10 +15,30 @@ import { createUserChatControllerInstance } from './controllers/chat/create-user
 
 const router = Router()
 
+// --- ROTAS PÚBLICAS ---
+// Não exigem autenticação
+
 router.post(
   '/users',
   createUserControllerInstance.handle.bind(createUserControllerInstance),
 )
+
+router.post(
+  '/login',
+  userLoginControllerInstance.handle.bind(userLoginControllerInstance),
+)
+
+// CORREÇÃO APLICADA AQUI: O middleware de autenticação foi removido.
+router.get(
+  '/animals/available',
+  getAvailableAnimalsControllerInstance.handle.bind(
+    getAvailableAnimalsControllerInstance,
+  ),
+)
+
+
+// --- ROTAS PRIVADAS ---
+// Exigem autenticação via token JWT
 
 router.patch(
   '/users',
@@ -55,14 +75,9 @@ router.get(
 )
 
 router.post(
-  '/login',
-  userLoginControllerInstance.handle.bind(userLoginControllerInstance),
-)
-
-router.post(
   '/animals',
   userAuthMiddlewareInstance.authenticate.bind(userAuthMiddlewareInstance),
-  upload.array('pictures', 5), // Middleware do multer para upload de até 5 arquivos
+  upload.array('pictures', 5),
   createAnimalControllerInstance.handle.bind(createAnimalControllerInstance),
 )
 
@@ -71,14 +86,6 @@ router.patch(
   userAuthMiddlewareInstance.authenticate.bind(userAuthMiddlewareInstance),
   updateAnimalStatusControllerInstance.handle.bind(
     updateAnimalStatusControllerInstance,
-  ),
-)
-
-router.get(
-  '/animals/available',
-  userAuthMiddlewareInstance.authenticate.bind(userAuthMiddlewareInstance),
-  getAvailableAnimalsControllerInstance.handle.bind(
-    getAvailableAnimalsControllerInstance,
   ),
 )
 
