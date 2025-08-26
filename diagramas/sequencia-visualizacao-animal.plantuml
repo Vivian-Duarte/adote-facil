@@ -1,0 +1,72 @@
+@startuml
+title Diagrama de Sequência - Visualização de Animais
+
+actor "Usuário Autenticado" as User
+boundary "Frontend (Next.js)" as FE
+control "Backend (Express)" as BE
+control "Middleware de Auth (JWT)" as AuthMW
+entity "Prisma ORM" as ORM
+database "PostgreSQL" as DB
+
+skinparam sequence {
+    ParticipantPadding 20
+    BoxPadding 10
+}
+skinparam box {
+    BorderColor #A3BE8C
+    BackgroundColor #ECEFF4
+}
+
+autonumber "<b>[00]"
+
+User -> FE: Clica em um link no menu de navegação
+activate FE
+
+par "Visualizar todos os animais disponíveis"
+    FE -> BE: GET /animals/available com Token no Header
+    activate BE
+
+    BE -> AuthMW: Verifica o Token JWT
+    activate AuthMW
+    AuthMW --> BE: Token válido
+    deactivate AuthMW
+
+    BE -> ORM: findManyAvailableAnimals()
+    activate ORM
+    ORM -> DB: SELECT * FROM "Animal" WHERE available = true
+    activate DB
+    DB --> ORM: Retorna lista de animais
+    deactivate DB
+    ORM --> BE: Retorna dados
+    deactivate ORM
+
+    BE --> FE: Resposta 200 OK com a lista de animais
+    deactivate BE
+and "Visualizar os próprios animais"
+    FE -> BE: GET /animals/user com Token no Header
+    activate BE
+
+    BE -> AuthMW: Verifica o Token JWT
+    activate AuthMW
+    AuthMW -> AuthMW: Extrai o ID do usuário do token
+    AuthMW --> BE: Token válido, anexa req.user
+    deactivate AuthMW
+
+    BE -> ORM: findAnimalsByUserId(req.user.id)
+    activate ORM
+    ORM -> DB: SELECT * FROM "Animal" WHERE userId = $1
+    activate DB
+    DB --> ORM: Retorna lista de animais do usuário
+    deactivate DB
+    ORM --> BE: Retorna dados
+    deactivate ORM
+
+    BE --> FE: Resposta 200 OK com a lista de animais
+    deactivate BE
+end
+
+FE -> FE: Recebe os dados e renderiza a lista na tela
+FE -> User: Exibe a página com os cards dos animais
+deactivate FE
+
+@enduml

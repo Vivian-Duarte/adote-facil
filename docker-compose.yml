@@ -33,10 +33,9 @@ services:
     depends_on:
       adote-facil-postgres:
         condition: service_healthy
-    command: sh -c "until nc -z adote-facil-postgres 5432; do echo 'Waiting for postgres...'; sleep 1; done; npm start"
+    command: sh -c "npm run migrate:prod && node dist/server.js"
     networks:
       - adote-facil-network
-
   adote-facil-frontend:
     build:
       context: ./frontend

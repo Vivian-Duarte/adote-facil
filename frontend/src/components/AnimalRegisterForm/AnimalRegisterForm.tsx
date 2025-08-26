@@ -196,7 +196,7 @@ export function AnimalRegisterForm() {
           </S.FormRow>
 
           <S.FormRow>
-            <S.AnimalPicturesInputWrapper>
+             <S.AnimalPicturesInputWrapper> 
               <S.RequiredInputLabel $hasError={!!errors.pictures}>
                 <span>Fotos</span>
                 {errors.pictures && <span>{errors.pictures.message}</span>}
@@ -240,7 +240,7 @@ export function AnimalRegisterForm() {
                   </S.AnimalPictureSwiperSlide>
                 ))}
               </S.AddAnimalPicturesSwiper>
-            </S.AnimalPicturesInputWrapper>
+            </S.AnimalPicturesInputWrapper>*
           </S.FormRow>
         </S.FormContent>
 
